@@ -36,15 +36,15 @@ def check_domain(request: URLRequest,db: Session = Depends(get_db),current_user 
             to_email=current_user.email,
             subject="⚠️ Phishing Alert",
             body=f"""
-The URL you checked is identified as PHISHING.
+            The URL you checked is identified as PHISHING.
 
-URL: {result['url']}
+            URL: {result['url']}
 
-Reason:
-{result['reason']}
+            Reason:
+            {result['reason']}
 
-Please avoid visiting this site.
-"""
+            Please avoid visiting this site.
+            """
         )
         return result
     except Exception as e:

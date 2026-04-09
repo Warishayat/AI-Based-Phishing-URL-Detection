@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import PromptTemplate
-
 from models.url_schema import URLCheckResponse
 
 load_dotenv()
@@ -36,7 +35,7 @@ prompt = PromptTemplate(
 def ai_url_check(url: str):
     chain = prompt | llm | parser
     result = chain.invoke({"url": url})
-    return result.dict()
+    return result.model_dump()
 
 def analyze_url(url: str):
     result = ai_url_check(url)

@@ -11,7 +11,6 @@ class User(Base):
     user_name = Column(String,nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
-    blocked_until = Column(DateTime, nullable=True)
     transactions = relationship("Transaction", back_populates="user")
 
 
