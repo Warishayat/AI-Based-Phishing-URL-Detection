@@ -69,7 +69,7 @@ const Signup = () => {
                   disabled={loading}
                   onChange={(e) => setFormData({...formData, user_name: e.target.value})}
                   className="w-full bg-[#e6eeff] border-transparent rounded-2xl py-3.5 pl-12 pr-4 text-slate-900 outline-none focus:ring-4 focus:ring-[#6236f5]/20 transition-all placeholder:text-slate-500 disabled:opacity-70 disabled:cursor-not-allowed"
-                  placeholder="waris_hayat"
+                  placeholder="Vaneeza Rasool"
                 />
               </div>
             </div>
@@ -84,7 +84,7 @@ const Signup = () => {
                   disabled={loading}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="w-full bg-[#e6eeff] border-transparent rounded-2xl py-3.5 pl-12 pr-4 text-slate-900 outline-none focus:ring-4 focus:ring-[#6236f5]/20 transition-all placeholder:text-slate-500 disabled:opacity-70 disabled:cursor-not-allowed"
-                  placeholder="name@numl.edu.pk"
+                  placeholder="vaneeza11@gmail.com"
                 />
               </div>
             </div>
