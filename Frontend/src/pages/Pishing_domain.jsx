@@ -126,7 +126,7 @@ const Pishing_domain = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">
-              {liveData?.analysis?.url.map((threat, index) => (
+              {liveData?.analysis?.map((item, index) => (
                 <div 
                   key={index} 
                   className="bg-slate-900/40 border border-white/5 p-5 rounded-2xl flex items-center justify-between hover:bg-slate-800/40 transition-colors group"
@@ -135,10 +135,10 @@ const Pishing_domain = () => {
                     <div className="p-2 bg-red-500/10 rounded-lg text-red-500">
                       <AlertTriangle size={18} />
                     </div>
-                    <span className="text-sm text-slate-300 truncate font-mono">{threat}</span>
+                    <span className="text-sm text-slate-300 truncate font-mono">{item.url}</span>
                   </div>
                   <a 
-                    href={threat} 
+                    href={item.url} 
                     target="_blank" 
                     rel="noreferrer"
                     className="p-2 text-slate-500 hover:text-white transition-colors"
@@ -153,7 +153,7 @@ const Pishing_domain = () => {
                   <Globe size={16} /> Analysis Report
                 </h3>
                 <p className="text-slate-400 text-xs leading-relaxed italic">
-                  {liveData?.analysis?.reason}
+                  {liveData?.analysis?.[0]?.reason}
                 </p>
               </div>
             </div>

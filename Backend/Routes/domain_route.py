@@ -9,12 +9,18 @@ def get_live_phishing():
     urls = get_phishing_urls()
     if not urls:
         raise HTTPException(status_code=500, detail="Failed to fetch phishing URLs")
-    try:
-        result = analyze_url(urls)
-    except Exception:
-        raise HTTPException(status_code=500, detail="AI analysis failed")
-
+    results = []
+    for url in urls:
+        try:
+            result = analyze_url(url)
+            results.append({"url": url, "analysis": result})
+        except Exception as exc:
+            # Log the exception if a logging system is available
+            # For now, we skip the problematic URL and continue
+            continue
+    if not results:
+        raise HTTPException(status_code=500, detail="AI analysis failed for all URLs")
     return {
         "total_urls": len(urls),
-        "analysis": result
+        "analysis": results
     }

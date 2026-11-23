@@ -5,23 +5,32 @@ from Database.tables import User
 from dotenv import load_dotenv
 import os
 from fastapi.routing import APIRouter
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from Database.database import get_db
-from models.user_Schema import UserCreate, UserLogin,get_current_user
+from models.user_Schema import UserCreate, UserLogin, get_current_user
 from fastapi.security import OAuth2PasswordRequestForm
 
-
-
 load_dotenv()
-
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHAM = os.getenv("ALGORITHM")
+ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 
+# Validate critical environment variables
+if not SECRET_KEY:
+    raise RuntimeError("Missing required environment variable: SECRET_KEY")
+if not ALGORITHM:
+    raise RuntimeError("Missing required environment variable: ALGORITHM")
+if not ACCESS_TOKEN_EXPIRE_MINUTES:
+    raise RuntimeError("Missing required environment variable: ACCESS_TOKEN_EXPIRE_MINUTES")
+
+try:
+    ACCESS_TOKEN_EXPIRE_MINUTES = int(ACCESS_TOKEN_EXPIRE_MINUTES)
+except ValueError:
+    raise RuntimeError("ACCESS_TOKEN_EXPIRE_MINUTES must be an integer")
 
 def hash_password(password: str):
     return pwd_context.hash(password)
@@ -31,9 +40,9 @@ def verify_password(plain, hashed):
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHAM)
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
 auth_router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -59,9 +68,8 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
 @auth_router.post("/login")
-def login(user: OAuth2PasswordRequestForm = Depends(),db: Session = Depends(get_db)):
+def login(user: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     try:
         db_user = db.query(User).filter(User.email == user.username).first()
 
@@ -77,7 +85,7 @@ def login(user: OAuth2PasswordRequestForm = Depends(),db: Session = Depends(get_
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
 @auth_router.get("/me")
 def get_me(current_user: User = Depends(get_current_user)):
     return {
